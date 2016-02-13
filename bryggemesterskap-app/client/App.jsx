@@ -1,4 +1,14 @@
 App = React.createClass({
+  getInitialState: function(){
+    return {element:'beers'};
+  },
+  childContextTypes: {
+    element: React.PropTypes.string
+  },
+  getChildContext: function(){
+    return {element: this.state.element}
+  },
+
   mixins: [ReactMeteorData],
 
   getMeteorData(){
@@ -7,17 +17,26 @@ App = React.createClass({
     }
   },
 
-renderBeers(){
-  return this.data.beers.map((beer) =>{
-    return <DisplayBeerDetails key={beer._id} beer={beer} />
-  });
-},
+ updateVisiblePane(element){
+   console.log('updateVisiblePane ' + element);
+   return <VisiblePane beers={this.getMeteorData().beers}/>
+ },
+
+ changeElement(element){
+   this.setState({element: element})
+ },
+
 
 render(){
   return (
-    <div className="mainClass">
-      <div className="panel-group" id="accordion">
-        {this.renderBeers()}
+    <div id="everything">
+      <div className="menu">
+        <Menu changeVisiblePane={this.changeElement}/>
+      </div>
+      <div className="mainClass">
+        <div className="panel-group" id="accordion">
+          {this.updateVisiblePane('beer')}
+        </div>
       </div>
     </div>
   )
